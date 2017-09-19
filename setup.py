@@ -200,6 +200,10 @@ def setup_package():
 
     if len(sys.argv) > 1 and sys.argv[1] == 'clean':
         return clean(root)
+    
+    
+    if not is_source_release(root):
+        generate_cython(root, 'thinc')
 
     with chdir(root):
         with open(os.path.join(root, 'thinc', 'about.py')) as f:
@@ -248,9 +252,6 @@ def setup_package():
                         extra_compile_args=['-arch=sm_20', '--ptxas-options=-v', '-c',
                                             '--compiler-options', "'-fPIC'"],
                         include_dirs = include_dirs + [CUDA['include']]))
-
-        if not is_source_release(root):
-            generate_cython(root, 'thinc')
 
         setup(
             name=about['__title__'],
